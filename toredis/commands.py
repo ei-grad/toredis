@@ -4,6 +4,9 @@ class RedisCommandsMixin(object):
         """
         Append a value to a key
 
+            :param key:
+            :param value:
+
         Complexity
         ----------
         O(1). The amortized time complexity is O(1) assuming the appended
@@ -19,6 +22,8 @@ class RedisCommandsMixin(object):
     def auth(self, password, callback=None):
         """
         Authenticate to the server
+
+            :param password:
         """
         args = ["AUTH"]
         args.append(password)
@@ -40,6 +45,10 @@ class RedisCommandsMixin(object):
         """
         Count set bits in a string
 
+            :param key:
+            :param start:
+            :param end:
+
         Complexity
         ----------
         O(N)
@@ -53,6 +62,11 @@ class RedisCommandsMixin(object):
     def bitop(self, operation, destkey, keys, callback=None):
         """
         Perform bitwise operations between strings
+
+            :param operation:
+            :param destkey:
+            :param keys:
+                string or list of strings
 
         Complexity
         ----------
@@ -72,6 +86,10 @@ class RedisCommandsMixin(object):
         Remove and get the first element in a list, or block until one is
         available
 
+            :param keys:
+                string or list of strings
+            :param timeout:
+
         Complexity
         ----------
         O(1)
@@ -88,6 +106,10 @@ class RedisCommandsMixin(object):
         """
         Remove and get the last element in a list, or block until one is
         available
+
+            :param keys:
+                string or list of strings
+            :param timeout:
 
         Complexity
         ----------
@@ -106,6 +128,10 @@ class RedisCommandsMixin(object):
         Pop a value from a list, push it to another list and return it; or
         block until one is available
 
+            :param source:
+            :param destination:
+            :param timeout:
+
         Complexity
         ----------
         O(1)
@@ -119,6 +145,8 @@ class RedisCommandsMixin(object):
     def client_kill(self, ip_port, callback=None):
         """
         Kill the connection of a client
+
+            :param ip_port:
 
         Complexity
         ----------
@@ -141,6 +169,8 @@ class RedisCommandsMixin(object):
     def config_get(self, parameter, callback=None):
         """
         Get the value of a configuration parameter
+
+            :param parameter:
         """
         args = ["CONFIG GET"]
         args.append(parameter)
@@ -159,6 +189,9 @@ class RedisCommandsMixin(object):
     def config_set(self, parameter, value, callback=None):
         """
         Set a configuration parameter to the given value
+
+            :param parameter:
+            :param value:
         """
         args = ["CONFIG SET"]
         args.append(parameter)
@@ -174,6 +207,8 @@ class RedisCommandsMixin(object):
     def debug_object(self, key, callback=None):
         """
         Get debugging information about a key
+
+            :param key:
         """
         args = ["DEBUG OBJECT"]
         args.append(key)
@@ -189,6 +224,8 @@ class RedisCommandsMixin(object):
         """
         Decrement the integer value of a key by one
 
+            :param key:
+
         Complexity
         ----------
         O(1)
@@ -200,6 +237,9 @@ class RedisCommandsMixin(object):
     def decrby(self, key, decrement, callback=None):
         """
         Decrement the integer value of a key by the given number
+
+            :param key:
+            :param decrement:
 
         Complexity
         ----------
@@ -213,6 +253,9 @@ class RedisCommandsMixin(object):
     def delete(self, keys, callback=None):
         """
         Delete a key
+
+            :param keys:
+                string or list of strings
 
         Complexity
         ----------
@@ -239,6 +282,8 @@ class RedisCommandsMixin(object):
         """
         Return a serialized version of the value stored at the specified key.
 
+            :param key:
+
         Complexity
         ----------
         O(1) to access the key and additional O(N*M) to serialized it, where N
@@ -253,6 +298,8 @@ class RedisCommandsMixin(object):
     def echo(self, message, callback=None):
         """
         Echo the given string
+
+            :param message:
         """
         args = ["ECHO"]
         args.append(message)
@@ -261,6 +308,12 @@ class RedisCommandsMixin(object):
     def eval(self, script, keys, args, callback=None):
         """
         Execute a Lua script server side
+
+            :param script:
+            :param keys:
+                string or list of strings
+            :param args:
+                string or list of strings
 
         Complexity
         ----------
@@ -282,6 +335,12 @@ class RedisCommandsMixin(object):
     def evalsha(self, sha1, keys, args, callback=None):
         """
         Execute a Lua script server side
+
+            :param sha1:
+            :param keys:
+                string or list of strings
+            :param args:
+                string or list of strings
 
         Complexity
         ----------
@@ -310,6 +369,8 @@ class RedisCommandsMixin(object):
         """
         Determine if a key exists
 
+            :param key:
+
         Complexity
         ----------
         O(1)
@@ -321,6 +382,9 @@ class RedisCommandsMixin(object):
     def expire(self, key, seconds, callback=None):
         """
         Set a key's time to live in seconds
+
+            :param key:
+            :param seconds:
 
         Complexity
         ----------
@@ -334,6 +398,9 @@ class RedisCommandsMixin(object):
     def expireat(self, key, timestamp, callback=None):
         """
         Set the expiration for a key as a UNIX timestamp
+
+            :param key:
+            :param timestamp:
 
         Complexity
         ----------
@@ -360,6 +427,8 @@ class RedisCommandsMixin(object):
         """
         Get the value of a key
 
+            :param key:
+
         Complexity
         ----------
         O(1)
@@ -371,6 +440,9 @@ class RedisCommandsMixin(object):
     def getbit(self, key, offset, callback=None):
         """
         Returns the bit value at offset in the string value stored at key
+
+            :param key:
+            :param offset:
 
         Complexity
         ----------
@@ -384,6 +456,10 @@ class RedisCommandsMixin(object):
     def getrange(self, key, start, end, callback=None):
         """
         Get a substring of the string stored at a key
+
+            :param key:
+            :param start:
+            :param end:
 
         Complexity
         ----------
@@ -402,6 +478,9 @@ class RedisCommandsMixin(object):
         """
         Set the string value of a key and return its old value
 
+            :param key:
+            :param value:
+
         Complexity
         ----------
         O(1)
@@ -414,6 +493,10 @@ class RedisCommandsMixin(object):
     def hdel(self, key, fields, callback=None):
         """
         Delete one or more hash fields
+
+            :param key:
+            :param fields:
+                string or list of strings
 
         Complexity
         ----------
@@ -431,6 +514,9 @@ class RedisCommandsMixin(object):
         """
         Determine if a hash field exists
 
+            :param key:
+            :param field:
+
         Complexity
         ----------
         O(1)
@@ -443,6 +529,9 @@ class RedisCommandsMixin(object):
     def hget(self, key, field, callback=None):
         """
         Get the value of a hash field
+
+            :param key:
+            :param field:
 
         Complexity
         ----------
@@ -457,6 +546,8 @@ class RedisCommandsMixin(object):
         """
         Get all the fields and values in a hash
 
+            :param key:
+
         Complexity
         ----------
         O(N) where N is the size of the hash.
@@ -468,6 +559,10 @@ class RedisCommandsMixin(object):
     def hincrby(self, key, field, increment, callback=None):
         """
         Increment the integer value of a hash field by the given number
+
+            :param key:
+            :param field:
+            :param increment:
 
         Complexity
         ----------
@@ -483,6 +578,10 @@ class RedisCommandsMixin(object):
         """
         Increment the float value of a hash field by the given amount
 
+            :param key:
+            :param field:
+            :param increment:
+
         Complexity
         ----------
         O(1)
@@ -497,6 +596,8 @@ class RedisCommandsMixin(object):
         """
         Get all the fields in a hash
 
+            :param key:
+
         Complexity
         ----------
         O(N) where N is the size of the hash.
@@ -509,6 +610,8 @@ class RedisCommandsMixin(object):
         """
         Get the number of fields in a hash
 
+            :param key:
+
         Complexity
         ----------
         O(1)
@@ -520,6 +623,10 @@ class RedisCommandsMixin(object):
     def hmget(self, key, fields, callback=None):
         """
         Get the values of all the given hash fields
+
+            :param key:
+            :param fields:
+                string or list of strings
 
         Complexity
         ----------
@@ -537,6 +644,10 @@ class RedisCommandsMixin(object):
         """
         Set multiple hash fields to multiple values
 
+            :param key:
+            :param member_score_dict:
+                key value dictionary
+
         Complexity
         ----------
         O(N) where N is the number of fields being set.
@@ -552,6 +663,10 @@ class RedisCommandsMixin(object):
         """
         Set the string value of a hash field
 
+            :param key:
+            :param field:
+            :param value:
+
         Complexity
         ----------
         O(1)
@@ -565,6 +680,10 @@ class RedisCommandsMixin(object):
     def hsetnx(self, key, field, value, callback=None):
         """
         Set the value of a hash field, only if the field does not exist
+
+            :param key:
+            :param field:
+            :param value:
 
         Complexity
         ----------
@@ -580,6 +699,8 @@ class RedisCommandsMixin(object):
         """
         Get all the values in a hash
 
+            :param key:
+
         Complexity
         ----------
         O(N) where N is the size of the hash.
@@ -591,6 +712,8 @@ class RedisCommandsMixin(object):
     def incr(self, key, callback=None):
         """
         Increment the integer value of a key by one
+
+            :param key:
 
         Complexity
         ----------
@@ -604,6 +727,9 @@ class RedisCommandsMixin(object):
         """
         Increment the integer value of a key by the given amount
 
+            :param key:
+            :param increment:
+
         Complexity
         ----------
         O(1)
@@ -616,6 +742,9 @@ class RedisCommandsMixin(object):
     def incrbyfloat(self, key, increment, callback=None):
         """
         Increment the float value of a key by the given amount
+
+            :param key:
+            :param increment:
 
         Complexity
         ----------
@@ -635,6 +764,8 @@ class RedisCommandsMixin(object):
     def keys(self, pattern, callback=None):
         """
         Find all keys matching the given pattern
+
+            :param pattern:
 
         Complexity
         ----------
@@ -656,6 +787,9 @@ class RedisCommandsMixin(object):
         """
         Get an element from a list by its index
 
+            :param key:
+            :param index:
+
         Complexity
         ----------
         O(N) where N is the number of elements to traverse to get to the
@@ -670,6 +804,11 @@ class RedisCommandsMixin(object):
     def linsert(self, key, where, pivot, value, callback=None):
         """
         Insert an element before or after another element in a list
+
+            :param key:
+            :param where:
+            :param pivot:
+            :param value:
 
         Complexity
         ----------
@@ -689,6 +828,8 @@ class RedisCommandsMixin(object):
         """
         Get the length of a list
 
+            :param key:
+
         Complexity
         ----------
         O(1)
@@ -701,6 +842,8 @@ class RedisCommandsMixin(object):
         """
         Remove and get the first element in a list
 
+            :param key:
+
         Complexity
         ----------
         O(1)
@@ -712,6 +855,10 @@ class RedisCommandsMixin(object):
     def lpush(self, key, values, callback=None):
         """
         Prepend one or multiple values to a list
+
+            :param key:
+            :param values:
+                string or list of strings
 
         Complexity
         ----------
@@ -729,6 +876,9 @@ class RedisCommandsMixin(object):
         """
         Prepend a value to a list, only if the list exists
 
+            :param key:
+            :param value:
+
         Complexity
         ----------
         O(1)
@@ -741,6 +891,10 @@ class RedisCommandsMixin(object):
     def lrange(self, key, start, stop, callback=None):
         """
         Get a range of elements from a list
+
+            :param key:
+            :param start:
+            :param stop:
 
         Complexity
         ----------
@@ -757,6 +911,10 @@ class RedisCommandsMixin(object):
         """
         Remove elements from a list
 
+            :param key:
+            :param count:
+            :param value:
+
         Complexity
         ----------
         O(N) where N is the length of the list.
@@ -770,6 +928,10 @@ class RedisCommandsMixin(object):
     def lset(self, key, index, value, callback=None):
         """
         Set the value of an element in a list by its index
+
+            :param key:
+            :param index:
+            :param value:
 
         Complexity
         ----------
@@ -786,6 +948,10 @@ class RedisCommandsMixin(object):
         """
         Trim a list to the specified range
 
+            :param key:
+            :param start:
+            :param stop:
+
         Complexity
         ----------
         O(N) where N is the number of elements to be removed by the operation.
@@ -799,6 +965,9 @@ class RedisCommandsMixin(object):
     def mget(self, keys, callback=None):
         """
         Get the values of all the given keys
+
+            :param keys:
+                string or list of strings
 
         Complexity
         ----------
@@ -814,6 +983,12 @@ class RedisCommandsMixin(object):
     def migrate(self, host, port, key, destination_db, timeout, callback=None):
         """
         Atomically transfer a key from a Redis instance to another one.
+
+            :param host:
+            :param port:
+            :param key:
+            :param destination_db:
+            :param timeout:
 
         Complexity
         ----------
@@ -840,6 +1015,9 @@ class RedisCommandsMixin(object):
         """
         Move a key to another database
 
+            :param key:
+            :param db:
+
         Complexity
         ----------
         O(1)
@@ -852,6 +1030,9 @@ class RedisCommandsMixin(object):
     def mset(self, key_dict, callback=None):
         """
         Set multiple keys to multiple values
+
+            :param member_score_dict:
+                key value dictionary
 
         Complexity
         ----------
@@ -866,6 +1047,9 @@ class RedisCommandsMixin(object):
     def msetnx(self, key_dict, callback=None):
         """
         Set multiple keys to multiple values, only if none of the keys exist
+
+            :param member_score_dict:
+                key value dictionary
 
         Complexity
         ----------
@@ -887,6 +1071,10 @@ class RedisCommandsMixin(object):
         """
         Inspect the internals of Redis objects
 
+            :param subcommand:
+            :param argumentss:
+                string or list of strings
+
         Complexity
         ----------
         O(1) for all the currently implemented subcommands.
@@ -903,6 +1091,8 @@ class RedisCommandsMixin(object):
         """
         Remove the expiration from a key
 
+            :param key:
+
         Complexity
         ----------
         O(1)
@@ -914,6 +1104,9 @@ class RedisCommandsMixin(object):
     def pexpire(self, key, milliseconds, callback=None):
         """
         Set a key's time to live in milliseconds
+
+            :param key:
+            :param milliseconds:
 
         Complexity
         ----------
@@ -928,6 +1121,9 @@ class RedisCommandsMixin(object):
         """
         Set the expiration for a key as a UNIX timestamp specified in
         milliseconds
+
+            :param key:
+            :param milliseconds_timestamp:
 
         Complexity
         ----------
@@ -948,6 +1144,10 @@ class RedisCommandsMixin(object):
         """
         Set the value and expiration in milliseconds of a key
 
+            :param key:
+            :param milliseconds:
+            :param value:
+
         Complexity
         ----------
         O(1)
@@ -961,6 +1161,9 @@ class RedisCommandsMixin(object):
     def psubscribe(self, patterns, callback=None):
         """
         Listen for messages published to channels matching the given patterns
+
+            :param member_score_dict:
+                string or list of strings
 
         Complexity
         ----------
@@ -978,6 +1181,8 @@ class RedisCommandsMixin(object):
         """
         Get the time to live for a key in milliseconds
 
+            :param key:
+
         Complexity
         ----------
         O(1)
@@ -989,6 +1194,9 @@ class RedisCommandsMixin(object):
     def publish(self, channel, message, callback=None):
         """
         Post a message to a channel
+
+            :param channel:
+            :param message:
 
         Complexity
         ----------
@@ -1005,6 +1213,9 @@ class RedisCommandsMixin(object):
         """
         Stop listening for messages posted to channels matching the given
         patterns
+
+            :param patterns:
+                string or list of strings
 
         Complexity
         ----------
@@ -1039,6 +1250,9 @@ class RedisCommandsMixin(object):
         """
         Rename a key
 
+            :param key:
+            :param newkey:
+
         Complexity
         ----------
         O(1)
@@ -1051,6 +1265,9 @@ class RedisCommandsMixin(object):
     def renamenx(self, key, newkey, callback=None):
         """
         Rename a key, only if the new key does not exist
+
+            :param key:
+            :param newkey:
 
         Complexity
         ----------
@@ -1065,6 +1282,10 @@ class RedisCommandsMixin(object):
         """
         Create a key using the provided serialized value, previously obtained
         using DUMP.
+
+            :param key:
+            :param ttl:
+            :param serialized_value:
 
         Complexity
         ----------
@@ -1085,6 +1306,8 @@ class RedisCommandsMixin(object):
         """
         Remove and get the last element in a list
 
+            :param key:
+
         Complexity
         ----------
         O(1)
@@ -1098,6 +1321,9 @@ class RedisCommandsMixin(object):
         Remove the last element in a list, append it to another list and
         return it
 
+            :param source:
+            :param destination:
+
         Complexity
         ----------
         O(1)
@@ -1110,6 +1336,10 @@ class RedisCommandsMixin(object):
     def rpush(self, key, values, callback=None):
         """
         Append one or multiple values to a list
+
+            :param key:
+            :param values:
+                string or list of strings
 
         Complexity
         ----------
@@ -1127,6 +1357,9 @@ class RedisCommandsMixin(object):
         """
         Append a value to a list, only if the list exists
 
+            :param key:
+            :param value:
+
         Complexity
         ----------
         O(1)
@@ -1139,6 +1372,10 @@ class RedisCommandsMixin(object):
     def sadd(self, key, members, callback=None):
         """
         Add one or more members to a set
+
+            :param key:
+            :param members:
+                string or list of strings
 
         Complexity
         ----------
@@ -1162,6 +1399,8 @@ class RedisCommandsMixin(object):
         """
         Get the number of members in a set
 
+            :param key:
+
         Complexity
         ----------
         O(1)
@@ -1173,6 +1412,9 @@ class RedisCommandsMixin(object):
     def script_exists(self, scripts, callback=None):
         """
         Check existence of scripts in the script cache.
+
+            :param scripts:
+                string or list of strings
 
         Complexity
         ----------
@@ -1210,6 +1452,8 @@ class RedisCommandsMixin(object):
         """
         Load the specified Lua script into the script cache.
 
+            :param script:
+
         Complexity
         ----------
         O(N) with N being the length in bytes of the script body.
@@ -1221,6 +1465,9 @@ class RedisCommandsMixin(object):
     def sdiff(self, keys, callback=None):
         """
         Subtract multiple sets
+
+            :param keys:
+                string or list of strings
 
         Complexity
         ----------
@@ -1237,6 +1484,10 @@ class RedisCommandsMixin(object):
         """
         Subtract multiple sets and store the resulting set in a key
 
+            :param destination:
+            :param keys:
+                string or list of strings
+
         Complexity
         ----------
         O(N) where N is the total number of elements in all given sets.
@@ -1252,6 +1503,8 @@ class RedisCommandsMixin(object):
     def select(self, index, callback=None):
         """
         Change the selected database for the current connection
+
+            :param index:
         """
         args = ["SELECT"]
         args.append(index)
@@ -1260,6 +1513,9 @@ class RedisCommandsMixin(object):
     def set(self, key, value, callback=None):
         """
         Set the string value of a key
+
+            :param key:
+            :param value:
 
         Complexity
         ----------
@@ -1273,6 +1529,10 @@ class RedisCommandsMixin(object):
     def setbit(self, key, offset, value, callback=None):
         """
         Sets or clears the bit at offset in the string value stored at key
+
+            :param key:
+            :param offset:
+            :param value:
 
         Complexity
         ----------
@@ -1288,6 +1548,10 @@ class RedisCommandsMixin(object):
         """
         Set the value and expiration of a key
 
+            :param key:
+            :param seconds:
+            :param value:
+
         Complexity
         ----------
         O(1)
@@ -1302,6 +1566,9 @@ class RedisCommandsMixin(object):
         """
         Set the value of a key, only if the key does not exist
 
+            :param key:
+            :param value:
+
         Complexity
         ----------
         O(1)
@@ -1314,6 +1581,10 @@ class RedisCommandsMixin(object):
     def setrange(self, key, offset, value, callback=None):
         """
         Overwrite part of a string at key starting at the specified offset
+
+            :param key:
+            :param offset:
+            :param value:
 
         Complexity
         ----------
@@ -1331,6 +1602,9 @@ class RedisCommandsMixin(object):
     def shutdown(self, nosave=False, save=False, callback=None):
         """
         Synchronously save the dataset to disk and then shut down the server
+
+            :param nosave:
+            :param save:
         """
         args = ["SHUTDOWN"]
         if nosave:
@@ -1342,6 +1616,9 @@ class RedisCommandsMixin(object):
     def sinter(self, keys, callback=None):
         """
         Intersect multiple sets
+
+            :param keys:
+                string or list of strings
 
         Complexity
         ----------
@@ -1358,6 +1635,10 @@ class RedisCommandsMixin(object):
     def sinterstore(self, destination, keys, callback=None):
         """
         Intersect multiple sets and store the resulting set in a key
+
+            :param destination:
+            :param keys:
+                string or list of strings
 
         Complexity
         ----------
@@ -1376,6 +1657,9 @@ class RedisCommandsMixin(object):
         """
         Determine if a given value is a member of a set
 
+            :param key:
+            :param member:
+
         Complexity
         ----------
         O(1)
@@ -1388,6 +1672,9 @@ class RedisCommandsMixin(object):
     def slaveof(self, host, port, callback=None):
         """
         Make the server a slave of another instance, or promote it as master
+
+            :param host:
+            :param port:
         """
         args = ["SLAVEOF"]
         args.append(host)
@@ -1397,6 +1684,9 @@ class RedisCommandsMixin(object):
     def slowlog(self, subcommand, argument=None, callback=None):
         """
         Manages the Redis slow queries log
+
+            :param subcommand:
+            :param argument:
         """
         args = ["SLOWLOG"]
         args.append(subcommand)
@@ -1406,6 +1696,8 @@ class RedisCommandsMixin(object):
     def smembers(self, key, callback=None):
         """
         Get all the members in a set
+
+            :param key:
 
         Complexity
         ----------
@@ -1418,6 +1710,10 @@ class RedisCommandsMixin(object):
     def smove(self, source, destination, member, callback=None):
         """
         Move a member from one set to another
+
+            :param source:
+            :param destination:
+            :param member:
 
         Complexity
         ----------
@@ -1432,6 +1728,14 @@ class RedisCommandsMixin(object):
     def sort(self, key, by=None, limit=None, get=tuple(), order=None, sorting=False, store=None, callback=None):
         """
         Sort the elements in a list, set or sorted set
+
+            :param key:
+            :param by:
+            :param limit:
+            :param get:
+            :param order:
+            :param sorting:
+            :param store:
 
         Complexity
         ----------
@@ -1465,6 +1769,8 @@ class RedisCommandsMixin(object):
         """
         Remove and return a random member from a set
 
+            :param key:
+
         Complexity
         ----------
         O(1)
@@ -1476,6 +1782,9 @@ class RedisCommandsMixin(object):
     def srandmember(self, key, count=None, callback=None):
         """
         Get one or multiple random members from a set
+
+            :param key:
+            :param count:
 
         Complexity
         ----------
@@ -1490,6 +1799,10 @@ class RedisCommandsMixin(object):
     def srem(self, key, members, callback=None):
         """
         Remove one or more members from a set
+
+            :param key:
+            :param members:
+                string or list of strings
 
         Complexity
         ----------
@@ -1507,6 +1820,8 @@ class RedisCommandsMixin(object):
         """
         Get the length of the value stored in a key
 
+            :param key:
+
         Complexity
         ----------
         O(1)
@@ -1518,6 +1833,9 @@ class RedisCommandsMixin(object):
     def subscribe(self, channels, callback=None):
         """
         Listen for messages published to the given channels
+
+            :param member_score_dict:
+                string or list of strings
 
         Complexity
         ----------
@@ -1534,6 +1852,9 @@ class RedisCommandsMixin(object):
         """
         Add multiple sets
 
+            :param keys:
+                string or list of strings
+
         Complexity
         ----------
         O(N) where N is the total number of elements in all given sets.
@@ -1548,6 +1869,10 @@ class RedisCommandsMixin(object):
     def sunionstore(self, destination, keys, callback=None):
         """
         Add multiple sets and store the resulting set in a key
+
+            :param destination:
+            :param keys:
+                string or list of strings
 
         Complexity
         ----------
@@ -1581,6 +1906,8 @@ class RedisCommandsMixin(object):
         """
         Get the time to live for a key
 
+            :param key:
+
         Complexity
         ----------
         O(1)
@@ -1593,6 +1920,8 @@ class RedisCommandsMixin(object):
         """
         Determine the type stored at key
 
+            :param key:
+
         Complexity
         ----------
         O(1)
@@ -1604,6 +1933,9 @@ class RedisCommandsMixin(object):
     def unsubscribe(self, channels=[], callback=None):
         """
         Stop listening for messages posted to the given channels
+
+            :param channels:
+                string or list of strings
 
         Complexity
         ----------
@@ -1630,6 +1962,9 @@ class RedisCommandsMixin(object):
         """
         Watch the given keys to determine execution of the MULTI/EXEC block
 
+            :param keys:
+                string or list of strings
+
         Complexity
         ----------
         O(1) for every key.
@@ -1646,6 +1981,10 @@ class RedisCommandsMixin(object):
         Add one or more members to a sorted set, or update its score if it
         already exists
 
+            :param key:
+            :param member_score_dict:
+                member score dictionary
+
         Complexity
         ----------
         O(log(N)) where N is the number of elements in the sorted set.
@@ -1661,6 +2000,8 @@ class RedisCommandsMixin(object):
         """
         Get the number of members in a sorted set
 
+            :param key:
+
         Complexity
         ----------
         O(1)
@@ -1672,6 +2013,10 @@ class RedisCommandsMixin(object):
     def zcount(self, key, min, max, callback=None):
         """
         Count the members in a sorted set with scores within the given values
+
+            :param key:
+            :param min:
+            :param max:
 
         Complexity
         ----------
@@ -1688,6 +2033,10 @@ class RedisCommandsMixin(object):
         """
         Increment the score of a member in a sorted set
 
+            :param key:
+            :param increment:
+            :param member:
+
         Complexity
         ----------
         O(log(N)) where N is the number of elements in the sorted set.
@@ -1702,6 +2051,12 @@ class RedisCommandsMixin(object):
         """
         Intersect multiple sorted sets and store the resulting sorted set in a
         new key
+
+            :param destination:
+            :param keys:
+                string or list of strings
+            :param weights:
+            :param aggregate:
 
         Complexity
         ----------
@@ -1728,6 +2083,11 @@ class RedisCommandsMixin(object):
         """
         Return a range of members in a sorted set, by index
 
+            :param key:
+            :param start:
+            :param stop:
+            :param withscores:
+
         Complexity
         ----------
         O(log(N)+M) with N being the number of elements in the sorted set and
@@ -1744,6 +2104,12 @@ class RedisCommandsMixin(object):
     def zrangebyscore(self, key, min, max, withscores=False, limit=None, callback=None):
         """
         Return a range of members in a sorted set, by score
+
+            :param key:
+            :param min:
+            :param max:
+            :param withscores:
+            :param limit:
 
         Complexity
         ----------
@@ -1769,6 +2135,9 @@ class RedisCommandsMixin(object):
         """
         Determine the index of a member in a sorted set
 
+            :param key:
+            :param member:
+
         Complexity
         ----------
         O(log(N))
@@ -1781,6 +2150,10 @@ class RedisCommandsMixin(object):
     def zrem(self, key, members, callback=None):
         """
         Remove one or more members from a sorted set
+
+            :param key:
+            :param members:
+                string or list of strings
 
         Complexity
         ----------
@@ -1799,6 +2172,10 @@ class RedisCommandsMixin(object):
         """
         Remove all members in a sorted set within the given indexes
 
+            :param key:
+            :param start:
+            :param stop:
+
         Complexity
         ----------
         O(log(N)+M) with N being the number of elements in the sorted set and
@@ -1813,6 +2190,10 @@ class RedisCommandsMixin(object):
     def zremrangebyscore(self, key, min, max, callback=None):
         """
         Remove all members in a sorted set within the given scores
+
+            :param key:
+            :param min:
+            :param max:
 
         Complexity
         ----------
@@ -1829,6 +2210,11 @@ class RedisCommandsMixin(object):
         """
         Return a range of members in a sorted set, by index, with scores
         ordered from high to low
+
+            :param key:
+            :param start:
+            :param stop:
+            :param withscores:
 
         Complexity
         ----------
@@ -1847,6 +2233,12 @@ class RedisCommandsMixin(object):
         """
         Return a range of members in a sorted set, by score, with scores
         ordered from high to low
+
+            :param key:
+            :param max:
+            :param min:
+            :param withscores:
+            :param limit:
 
         Complexity
         ----------
@@ -1873,6 +2265,9 @@ class RedisCommandsMixin(object):
         Determine the index of a member in a sorted set, with scores ordered
         from high to low
 
+            :param key:
+            :param member:
+
         Complexity
         ----------
         O(log(N))
@@ -1885,6 +2280,9 @@ class RedisCommandsMixin(object):
     def zscore(self, key, member, callback=None):
         """
         Get the score associated with the given member in a sorted set
+
+            :param key:
+            :param member:
 
         Complexity
         ----------
@@ -1899,6 +2297,12 @@ class RedisCommandsMixin(object):
         """
         Add multiple sorted sets and store the resulting sorted set in a new
         key
+
+            :param destination:
+            :param keys:
+                string or list of strings
+            :param weights:
+            :param aggregate:
 
         Complexity
         ----------

@@ -85,10 +85,13 @@ def parse_arguments(command, arguments):
                         code.append(prefix + 'args.append(%s)' % argname(i))
                 else:
                     code.append(prefix + 'args.append(%s)' % cmd)
+
             if 'optional' in arg:
                 args.append('%s=%s' % (cmd, cmd_default))
             else:
                 args.append(cmd)
+
+            doc.append(':param %s:' % cmd)
         # Special case for numkeys parameter
         elif arg['name'] == 'numkeys':
             # do not adding arg for numkeys argument
@@ -109,6 +112,9 @@ def parse_arguments(command, arguments):
                 code.append('for member, score in member_score_dict.items():')
                 code.append('    args.append(score)')
                 code.append('    args.append(member)')
+
+                doc.append(':param member_score_dict:')
+                doc.append('    member score dictionary')
             # value pairs
             elif len(arg['name']) == 2 and arg['name'][1] == 'value':
                 arg_name = argname(arg['name'][0])
@@ -117,7 +123,10 @@ def parse_arguments(command, arguments):
                 code.append('for %s, value in %s.items():' % (arg_name, name))
                 code.append('    args.append(%s)' % arg_name)
                 code.append('    args.append(value)')
-            # if length is 1, use parameter
+
+                doc.append(':param member_score_dict:')
+                doc.append('    key value dictionary')
+            # special case for length = 1
             elif len(arg['name']) == 1:
                 name = '%ss' % argname(arg['name'][0])
                 args.append(name)
@@ -125,6 +134,9 @@ def parse_arguments(command, arguments):
                 code.append('    args.append(%s)' % name)
                 code.append('else:')
                 code.append('    args.extend(%s)' % name)
+
+                doc.append(':param member_score_dict:')
+                doc.append('    string or list of strings')
             else:
                 raise Exception('Unknown list name group in argument '
                                 'specification: %s' % arg['name'])
@@ -133,6 +145,7 @@ def parse_arguments(command, arguments):
                 'Argument %s is already in args!' % argname(arg['name'])
             )
         elif 'multiple' in arg:
+            # If it is last parameter, use *arg notation
             name = '%ss' % argname(arg['name'])
             if arg.get('optional'):
                 args.append('%s=[]' % name)
@@ -142,11 +155,16 @@ def parse_arguments(command, arguments):
             code.append('    args.append(%s)' % name)
             code.append('else:')
             code.append('    args.extend(%s)' % name)
+
+            doc.append(':param %s:' % name)
+            doc.append('    string or list of strings')
         elif 'enum' in arg and len(arg['enum']) == 1 and arg.get('optional'):
             name = argname(arg['name'])
             args.append('%s=False' % name)
             code.append('if %s:' % name)
             code.append('    args.append("%s")' % arg['enum'][0])
+
+            doc.append(':param %s:' % name)
         else:
             name = argname(arg['name'])
             code.append('args.append(%s)' % name)
@@ -154,6 +172,8 @@ def parse_arguments(command, arguments):
                 args.append('%s=None' % name)
             else:
                 args.append(name)
+            doc.append(':param %s:' % name)
+
     args.append('callback=None')
     if len(code) > 1:
         code.append('self.send_message(args, callback)')
@@ -195,8 +215,6 @@ def get_command_code(func_name, cmd, params):
         doc.extend(wrap(params['summary']))
     if args_doc:
         doc.append('')
-        doc.append('Arguments')
-        doc.append('---------')
         doc.extend(args_doc)
     if 'complexity' in params:
         doc.append('')
