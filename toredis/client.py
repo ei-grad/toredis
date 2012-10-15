@@ -18,13 +18,11 @@ logger = logging.getLogger(__name__)
 
 
 class Connection(RedisCommandsMixin):
-
-    def __init__(self, redis, on_connect=None):
-
-        self.redis = redis
+    def __init__(self, io_loop, on_connect=None):
         self._on_connect_callback = on_connect
 
-        sock = socket.socket(redis._family, socket.SOCK_STREAM, 0)
+        # TODO: Configurable family
+        sock = socket.socket(sock.AF_INET, socket.SOCK_STREAM, 0)
         stream = IOStream(sock, io_loop=redis._ioloop)
         self.stream = stream
         stream.set_close_callback(self._on_close)
@@ -132,7 +130,6 @@ class Connection(RedisCommandsMixin):
 
 
 class Redis(RedisCommandsMixin):
-
     def __init__(self, host="localhost", port=6379, unixsocket=None,
                  database=0, ioloop=None):
         """

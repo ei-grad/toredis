@@ -212,5 +212,6 @@ def compile_commands():
 
 
 if __name__ == "__main__":
-    with open(os.path.join(os.path.dirname(__file__), 'commands.py'), 'w') as f:
+    with open(os.path.join(os.path.dirname(__file__), 'toredis/commands.py'), 'w') as f:
         f.write(get_class_source('RedisCommandsMixin'))
+        print 'Generated commands.py'
