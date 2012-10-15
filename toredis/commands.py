@@ -968,7 +968,10 @@ class RedisCommandsMixin(object):
         subscribed to.
         """
         args = ["PSUBSCRIBE"]
-        args.extend(patterns)
+        if isinstance(patterns, basestring):
+            args.append(patterns)
+        else:
+            args.extend(patterns)
         self.send_message(args, callback)
 
     def pttl(self, key, callback=None):
@@ -1521,7 +1524,10 @@ class RedisCommandsMixin(object):
         O(N) where N is the number of channels to subscribe to.
         """
         args = ["SUBSCRIBE"]
-        args.extend(channels)
+        if isinstance(channels, basestring):
+            args.append(channels)
+        else:
+            args.extend(channels)
         self.send_message(args, callback)
 
     def sunion(self, keys, callback=None):

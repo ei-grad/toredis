@@ -24,22 +24,30 @@ def parse_arguments(command, arguments):
     args = ['self']
     doc = []
     code = ['args = ["%s"]' % command]
+
     for arg in arguments:
+        # Sub-command parsing
         if 'command' in arg:
             cmd = argname(arg['command'])
+
             if cmd in args:
                 raise Exception('Command %s is already in args!' % cmd)
+
             cmd_default = 'None'
+
             if arg.get('multiple'):
                 cmd_default = 'tuple()'
+
                 if isinstance(arg['name'], list):
                     code.append('for %s in %s:' % (
                         ', '.join([argname(i) for i in arg['name']]),
                         cmd
                     ))
+
                     code.append(
                         '    args.append("%s")' % arg['command']
                     )
+
                     for i in arg['name']:
                         code.append('    args.append(%s)' % argname(i))
                 else:
@@ -65,7 +73,9 @@ def parse_arguments(command, arguments):
                     code.append('if %s:' % cmd)
                 else:
                     prefix = ''
+
                 code.append(prefix + 'args.append("%s")' % arg['command'])
+
                 if isinstance(arg['name'], list):
                     code.append(prefix + '%s = %s' % (
                         ', '.join([argname(i) for i in arg['name']]),
@@ -79,6 +89,7 @@ def parse_arguments(command, arguments):
                 args.append('%s=%s' % (cmd, cmd_default))
             else:
                 args.append(cmd)
+        # Special case for numkeys parameter
         elif arg['name'] == 'numkeys':
             # do not adding arg for numkeys argument
             assert arguments[arguments.index(arg) + 1] == {
@@ -87,13 +98,18 @@ def parse_arguments(command, arguments):
                 "multiple": True
             }
             code.append('args.append(len(keys))')
+        # If name is list
         elif isinstance(arg['name'], list):
-            assert arg.get('multiple')  # makes no sense for single pairs
+            # makes no sense for single pairs
+            assert arg.get('multiple')
+
+            # special case for score and member
             if arg['name'] == [u"score", u"member"]:
                 args.append('member_score_dict')
                 code.append('for member, score in member_score_dict.items():')
                 code.append('    args.append(score)')
                 code.append('    args.append(member)')
+            # value pairs
             elif len(arg['name']) == 2 and arg['name'][1] == 'value':
                 arg_name = argname(arg['name'][0])
                 name = '%s_dict' % arg_name
@@ -101,10 +117,14 @@ def parse_arguments(command, arguments):
                 code.append('for %s, value in %s.items():' % (arg_name, name))
                 code.append('    args.append(%s)' % arg_name)
                 code.append('    args.append(value)')
+            # if length is 1, use parameter
             elif len(arg['name']) == 1:
                 name = '%ss' % argname(arg['name'][0])
                 args.append(name)
-                code.append('args.extend(%s)' % name)
+                code.append('if isinstance(%s, basestring):' % name)
+                code.append('    args.append(%s)' % name)
+                code.append('else:')
+                code.append('    args.extend(%s)' % name)
             else:
                 raise Exception('Unknown list name group in argument '
                                 'specification: %s' % arg['name'])
