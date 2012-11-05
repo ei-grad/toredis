@@ -183,7 +183,7 @@ def parse_arguments(command, arguments):
 
         # If argument could be specified multiple times
         elif 'multiple' in arg:
-            # If it is last parameter, use *arg notation
+            # XXX: if it is last parameter, use *arg notation
             name = '%ss' % argname(arg['name'])
             if arg.get('optional'):
                 args.append('%s=[]' % name)
