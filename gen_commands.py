@@ -21,13 +21,16 @@ def argname(name):
 
 
 def parse_arguments(command, arguments):
+
     args = ['self']
     doc = []
     code = ['args = ["%s"]' % command]
 
     for arg in arguments:
+
         # Sub-command parsing
         if 'command' in arg:
+
             cmd = argname(arg['command'])
 
             if cmd in args:
@@ -36,38 +39,60 @@ def parse_arguments(command, arguments):
             cmd_default = 'None'
 
             if arg.get('multiple'):
+
+                # subcommand can be specified multiple times
+
                 cmd_default = 'tuple()'
 
                 if isinstance(arg['name'], list):
+
+                    # subcommand has several arguments
                     code.append('for %s in %s:' % (
                         ', '.join([argname(i) for i in arg['name']]),
                         cmd
                     ))
-
                     code.append(
                         '    args.append("%s")' % arg['command']
                     )
-
                     for i in arg['name']:
                         code.append('    args.append(%s)' % argname(i))
+
                 else:
+
+                    # subcommand has a single argument
                     code.append('for %s in %s:' % (argname(arg['name']), cmd))
                     code.append('    args.append("%s")' % arg['command'])
                     code.append('    args.append(%s)' % argname(arg['name']))
+
             elif arg.get('variadic'):
+
+                # subcommand has a single argument which can be specified
+                # multiple times (WEIGHTS subcommand - every argument
+                # should have corresponding key specified before WEIGHTS
+                # subcommand)
+
                 cmd_default = 'tuple()'
+
                 code.append('if len(%s):' % cmd)
                 code.append('    args.append("%s")' % arg['command'])
+
                 if isinstance(arg['name'], list):
+
                     code.append('    for %s in %s:' % (
                         ', '.join([argname(i) for i in arg['name']]),
                         cmd
                     ))
+
                     for i in arg['name']:
                         code.append('        args.append(%s)' % argname(i))
+
                 else:
                     code.append('    args.extend(%s)' % cmd)
+
             else:
+
+                # subcommand could be specified only once
+
                 if arg.get('optional'):
                     prefix = '    '
                     code.append('if %s:' % cmd)
@@ -77,12 +102,15 @@ def parse_arguments(command, arguments):
                 code.append(prefix + 'args.append("%s")' % arg['command'])
 
                 if isinstance(arg['name'], list):
+
                     code.append(prefix + '%s = %s' % (
                         ', '.join([argname(i) for i in arg['name']]),
                         cmd
                     ))
+
                     for i in arg['name']:
                         code.append(prefix + 'args.append(%s)' % argname(i))
+
                 else:
                     code.append(prefix + 'args.append(%s)' % cmd)
 
@@ -92,6 +120,7 @@ def parse_arguments(command, arguments):
                 args.append(cmd)
 
             doc.append(':param %s:' % cmd)
+
         # Special case for numkeys parameter
         elif arg['name'] == 'numkeys':
             # do not adding arg for numkeys argument
@@ -101,8 +130,10 @@ def parse_arguments(command, arguments):
                 "multiple": True
             }
             code.append('args.append(len(keys))')
+
         # If name is list
         elif isinstance(arg['name'], list):
+
             # makes no sense for single pairs
             assert arg.get('multiple')
 
@@ -115,6 +146,7 @@ def parse_arguments(command, arguments):
 
                 doc.append(':param member_score_dict:')
                 doc.append('    member score dictionary')
+
             # value pairs
             elif len(arg['name']) == 2 and arg['name'][1] == 'value':
                 arg_name = argname(arg['name'][0])
@@ -126,6 +158,7 @@ def parse_arguments(command, arguments):
 
                 doc.append(':param member_score_dict:')
                 doc.append('    key value dictionary')
+
             # special case for length = 1
             elif len(arg['name']) == 1:
                 name = '%ss' % argname(arg['name'][0])
@@ -137,13 +170,18 @@ def parse_arguments(command, arguments):
 
                 doc.append(':param member_score_dict:')
                 doc.append('    string or list of strings')
+
             else:
                 raise Exception('Unknown list name group in argument '
                                 'specification: %s' % arg['name'])
+
+        # Don't add the same argument twice
         elif argname(arg['name']) in args:
             raise Exception(
                 'Argument %s is already in args!' % argname(arg['name'])
             )
+
+        # If argument could be specified multiple times
         elif 'multiple' in arg:
             # If it is last parameter, use *arg notation
             name = '%ss' % argname(arg['name'])
