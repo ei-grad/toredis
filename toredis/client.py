@@ -20,25 +20,25 @@ logger = logging.getLogger(__name__)
 class Connection(RedisCommandsMixin):
 
     def __init__(self, redis, on_connect=None):
-
+        logger.debug('Creating new Redis connection.')
         self.redis = redis
-        self._on_connect_callback = on_connect
-
-        sock = socket.socket(redis._family, socket.SOCK_STREAM, 0)
-        stream = IOStream(sock, io_loop=redis._ioloop)
-        self.stream = stream
-        stream.set_close_callback(self._on_close)
-        stream.read_until_close(self._on_close, self._on_read)
-        stream.connect(redis._addr, self._on_connect)
-
         self.reader = hiredis.Reader()
-
         self._watch = set()
         self._multi = False
-
         self.callbacks = deque()
+        self._on_connect_callback = on_connect
+
+        self.stream = IOStream(
+            socket.socket(redis._family, socket.SOCK_STREAM, 0),
+            io_loop=redis._ioloop
+        )
+        self.stream.set_close_callback(self._on_close)
+        self.stream.connect(redis._addr, self._on_connect)
+
 
     def _on_connect(self):
+        logger.debug('Connected!')
+        self.stream.read_until_close(self._on_close, self._on_read)
         self.redis._shared.append(self)
         if self._on_connect_callback is not None:
             self._on_connect_callback(self)
@@ -125,6 +125,7 @@ class Connection(RedisCommandsMixin):
             self.lock()
 
     def _on_close(self, data=None):
+        logger.debug('Redis connection was closed.')
         if data is not None:
             self._on_read(data)
         if self.is_shared():
