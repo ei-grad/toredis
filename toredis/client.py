@@ -10,6 +10,7 @@ import hiredis
 from tornado.iostream import IOStream
 from tornado.ioloop import IOLoop
 from tornado import stack_context
+from tornado.concurrent import Future, chain_future
 
 from toredis.commands import RedisCommandsMixin
 
@@ -103,9 +104,15 @@ class Connection(RedisCommandsMixin):
             self._watch.clear()
 
         self.stream.write(self.format_message(args))
+
+        future = Future()
+
         if callback is not None:
-            callback = stack_context.wrap(callback)
-        self.callbacks.append(callback)
+            future.add_done_callback(stack_context.wrap(callback))
+
+        self.callbacks.append(future.set_result)
+
+        return future
 
     def format_message(self, args):
         l = "*%d" % len(args)
@@ -158,14 +165,15 @@ class Redis(RedisCommandsMixin):
 
         self._shared = deque()
 
-    def _get_connection(self, callback):
+    def _get_connection(self):
+        future = Future()
         if self._shared:
             self._shared.rotate()
-            callback(self._shared[-1])
+            future.set_result(self._shared[-1])
         else:
-            callback = stack_context.wrap(callback)
             with stack_context.NullContext():
-                Connection(self, callback)
+                Connection(self, future.set_result)
+        return future
 
     def send_message(self, args, callback):
         """
@@ -174,9 +182,20 @@ class Redis(RedisCommandsMixin):
         args: a list of message arguments including command
         callback: a function to which the result would be passed
         """
-        def cb(conn):
-            conn.send_message(args, callback)
-        self._get_connection(cb)
+
+        future1 = Future()
+        future2 = self._get_connection()
+        if callback is not None:
+            callback = stack_context.wrap(callback)
+        def handle_connection(future):
+            conn = future.result()
+            if callback is not None:
+                def handle_result(future):
+                    self.io_loop.add_callback(callback, future.result())
+                future1.add_done_callback(handle_result)
+            chain_future(conn.send_message(args), future1)
+        future2.add_done_callback(handle_connection)
+        return future1
 
     def get_locked_connection(self, callback):
         """
