@@ -46,12 +46,13 @@ class Connection(RedisCommandsMixin):
 
     def _on_read(self, data):
         self.reader.feed(data)
-        resp = self.reader.gets()
-        while resp is not False:
+        while True:
+            resp = self.reader.gets()
+            if resp is False:
+                break
             callback = self.callbacks.popleft()
             if callback is not None:
                 self.redis._ioloop.add_callback(partial(callback, resp))
-            resp = self.reader.gets()
 
     def is_idle(self):
         return len(self.callbacks) == 0
