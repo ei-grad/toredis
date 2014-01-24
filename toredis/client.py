@@ -191,7 +191,7 @@ class Redis(RedisCommandsMixin):
             conn = future.result()
             if callback is not None:
                 def handle_result(future):
-                    self.io_loop.add_callback(callback, future.result())
+                    self._ioloop.add_callback(callback, future.result())
                 future1.add_done_callback(handle_result)
             chain_future(conn.send_message(args), future1)
         future2.add_done_callback(handle_connection)
