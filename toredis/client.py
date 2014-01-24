@@ -118,7 +118,7 @@ class Connection(RedisCommandsMixin):
         l = "*%d" % len(args)
         lines = [l.encode('utf-8')]
         for arg in args:
-            if not isinstance(arg, basestring):
+            if not isinstance(arg, str):
                 arg = str(arg)
             arg = arg.encode('utf-8')
             l = "$%d" % len(arg)
