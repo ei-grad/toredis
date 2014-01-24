@@ -152,7 +152,7 @@ class Redis(RedisCommandsMixin):
         execute transactions and (p)subscribe commands.
         """
 
-        self._ioloop = ioloop or IOLoop.instance()
+        self._ioloop = ioloop or IOLoop.current()
 
         if unixsocket is None:
             self._family = socket.AF_INET
