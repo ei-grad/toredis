@@ -88,7 +88,7 @@ class Connection(RedisCommandsMixin):
 
         # Do not allow the commands, affecting the execution of other commands,
         # to be used on shared connection.
-        if command in ('WATCH', 'MULTI', 'SELECT'):
+        if command in ('WATCH', 'MULTI'):
             if self.is_shared():
                 raise Exception('Command %s is not allowed while connection '
                                 'is shared!' % command)
