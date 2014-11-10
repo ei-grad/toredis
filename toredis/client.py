@@ -171,8 +171,12 @@ class Redis(RedisCommandsMixin):
             self._shared.rotate()
             future.set_result(self._shared[-1])
         else:
+            def cb(conn):
+                if self._database:
+                    conn.select(self._database)
+                future.set_result(conn)
             with stack_context.NullContext():
-                Connection(self, future.set_result)
+                Connection(self, cb)
         return future
 
     def send_message(self, args, callback):
